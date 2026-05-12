@@ -41,7 +41,7 @@ This project demonstrates a layered backend architecture, secure authentication,
 
 ### Database
 
-- MySQL
+- PostgreSQL
 
 ### Build Tool
 
@@ -62,7 +62,7 @@ src/main/java/ir/aspireapps/phonebook
 ├── model
 ├── repo
 ├── security
-├── service
+├── service vv
 └── error
 ```
 
@@ -110,7 +110,7 @@ cd phonebook
 Configure Database
 
 Update application.properties:
-spring.datasource.url=jdbc:mysql://localhost:3306/phonebook
+spring.datasource.url=jdbc:postgresql://localhost:5432/phonebook
 spring.datasource.username=YOUR_USERNAME
 spring.datasource.password=YOUR_PASSWORD
 
