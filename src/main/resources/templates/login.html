@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8" data-bs-theme="light">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+		<title th:text="${title}"><!-- Page title goes here --></title>
+		<link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+		<link rel="stylesheet" href="/css/styles.min.css">
+	    <style>
+	        .login-card {
+	            width: 430px;
+	            border-radius: 16px;
+	        }
+	        .error-text {
+	            color: #b22222;
+	            font-size: 0.875rem;
+	        }
+	    </style>		
+	</head>
+	<body id="home-page" data-bs-spy="scroll" data-bs-target="#mainNav" data-bs-offset="54" style="background: rgb(33, 37, 41);">
+		<!-- navigation bar -->
+		<th:block th:if="${loggedin}">
+			<nav th:replace="~{fragments/loggedinNavbar :: navbar}"></nav>
+		</th:block>
+		<th:block th:unless="${loggedin}">
+			<nav th:replace="~{fragments/loggedoutNavbar :: navbar}"></nav>
+		</th:block>
+		
+		<header class="masthead" th:fragment="body_loggedout" style="background-image: url('/img/header-bg.jpg');">
+			<div class="container">
+
+				<div class="container d-flex justify-content-center align-items-center" style="min-height:100vh;">
+				
+				    <div class="card shadow-lg border-0 login-card p-4">
+				
+				        <h4 class="text-center mb-4 fw-bold">Login</h4>
+				
+				        <!-- پیام خطا هنگام ورود ناموفق -->
+				        <div th:if="${param.error}" class="alert alert-danger text-center">
+				            Invalid email or password
+				        </div>
+				
+				        <!-- پیام خروج موفق -->
+				        <div th:if="${param.logout}" class="alert alert-success text-center">
+				            You have been logged out successfully
+				        </div>
+				
+				        <form th:action="@{/perform_login}" method="post">
+				        	<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+				            			            
+				            <!-- Email -->
+				            <div class="mb-3">
+				                <input type="email" name = "email" class="form-control form-control-lg" placeholder="Email" required>
+				            </div>
+				
+				            <!-- Password -->
+				            <div class="mb-3">
+				                <input type="password" name = "password" class="form-control form-control-lg" placeholder="Password" required>
+				            </div>
+				
+				            <!-- Remember me -->
+				            <div class="mb-3 text-center">
+				                <input type="checkbox" name="remember-me"> Remember me
+				            </div>
+				
+				            <button type="submit" class="btn btn-dark w-100 btn-lg mb-3">Login</button>
+				
+				            <!-- لینک رفتن به ثبت‌نام -->
+				            <p class="text-center mt-2">
+				                Don’t have an account?
+				                <a th:href="@{/register}" class="fw-semibold">Create one</a>
+				            </p>
+				
+				        </form>
+				
+				    </div>
+				
+				</div>
+
+			</div>
+		</header>
+		
+		<th:block th:replace="~{fragments/footer :: footer}"></th:block>
+						
+		<!-- modals -->
+		<div th:replace="~{fragments/disclaimer :: disclaimer}"></div>
+		
+		<!-- scripts -->
+		<script src="/bootstrap/js/bootstrap.min.js"></script>
+		<script src="/js/script.min.js"></script>		
+	</body>
+</html>

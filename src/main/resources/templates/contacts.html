@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html data-bs-theme="light" lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8" data-bs-theme="light">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+		<title th:text="${title}">PhoneBook</title>
+	    <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.min.css}">
+	    <link rel="stylesheet" th:href="@{/css/styles.min.css}">
+	</head>
+
+	<body id="page-top" data-bs-spy="scroll" data-bs-target="#mainNav" data-bs-offset="54" style="background: rgb(33, 37, 41);">
+		<nav th:replace="~{fragments/loggedinNavbar :: navbar}"></nav>
+
+		
+		<header class="masthead" th:fragment="body_loggedout" style="background-image: url('/img/header-bg.jpg');">
+			<div class="container">
+				<br/>
+			    <div class="d-flex justify-content-between mb-3">
+			        <h3>Contacts</h3>
+			        <a class="btn btn-success" data-bs-toggle="modal" data-bs-target="#newModal" href="#">+ Add New Contact</a>
+			    </div>
+			    
+			    <form class="row mb-3" method="get" th:action="@{/contacts}" >
+			        <div class="col-10">
+			            <input type="text" name="keyword" class="form-control" th:value="${keyword}" placeholder="Search by name...">
+			        </div>
+			        <div class="col-2">
+			            <button type = "submit" class="btn btn-primary w-100">Search</button>
+			        </div>
+			    </form>		  
+			     
+			     <div class="table-responsive">
+					<table class="table table-striped table-bordered ">
+						<thead class="table-dark">
+							<tr>
+								<th>#</th>
+								
+								<th>
+									<a th:href="@{/contacts(page=${currentPage}, sortBy='lastName', sortDir=${reverseSortDir}, keyword=${keyword})}">
+										Name
+										<i class="bi" th:classappend="${sortDir == 'asc'} ? 'bi-arrow-down' : 'bi-arrow-up'"></i>
+									</a>
+								</th>
+								
+								<th>Phone</th>
+								<th>Email</th>
+								<th class="text-center">Action</th>
+							</tr>
+						</thead>
+							
+						<tbody>
+							<tr th:each="c, i : ${page.content}">
+								<td th:text="${i.index + 1 + (currentPage * page.size)}"></td>
+								<td th:text="${c.firstName + ' ' + c.lastName}"></td>
+								<td th:text="${c.phone}"></td>
+								<td th:text="${c.email}"></td>
+							
+					            <td>
+					                <form th:action="@{|/contacts/edit/${c.id}|}" method="post"
+					                	style="display: inline-block;" >
+					                	<button type="button"
+											    class="btn btn-sm btn-primary"
+											    data-bs-toggle="modal"
+											    data-bs-target="#editModal"
+											    th:attr="data-id=${c.id},
+											    		 data-firstName=${c.firstName},
+											    		 data-lastName=${c.lastName},
+											    		 data-email=${c.email},
+											    		 data-phone=${c.phone}">
+					                		Edit
+					                	</button>
+					                </form>					                   
+					
+					                <form th:action="@{|/contacts/delete/${c.id}|}" method="post"
+					                	style="display: inline-block;"  
+					                	onsubmit="return confirm('delete this contact?')">
+					                	<button type="submit" class="btn btn-sm btn-danger">
+					                		Delete
+					                	</button>
+					                </form>
+					            </td>						
+							</tr>
+						</tbody>
+					</table>
+				</div>						
+						
+				<nav th:if="${totalPages > 1}">						
+					<ul class="pagination justify-content-center">
+		                <!-- Prev -->
+		                <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+		                    <a class="page-link"
+		                       th:href="@{/contacts(page=${currentPage-1}, sortBy=${sortBy}, sortDir=${sortDir}, keyword=${keyword})}">
+		                        Prev
+		                    </a>
+		                </li>
+		
+		                <!-- Page Numbers -->
+		                <li class="page-item"
+		                    th:each="i : ${#numbers.sequence(0, totalPages-1)}"
+		                    th:classappend="${i == currentPage} ? 'active'">
+		                    <a class="page-link"
+		                       th:href="@{/contacts(page=${i}, sortBy=${sortBy}, sortDir=${sortDir}, keyword=${keyword})}"
+		                       th:text="${i + 1}">
+		                    </a>
+		                </li>
+		
+		                <!-- Next -->
+		                <li class="page-item" th:classappend="${currentPage >= totalPages - 1} ? 'disabled'">
+		                    <a class="page-link"
+		                       th:href="@{/contacts(page=${currentPage + 1}, sortBy=${sortBy}, sortDir=${sortDir}, keyword=${keyword})}">
+		                        Next
+		                    </a>
+		                </li>													
+					</ul>
+				</nav>
+
+					
+			</div>
+		</header>		
+		
+		<th:block th:replace="~{fragments/footer :: footer}"></th:block>
+				
+		<div th:replace="~{fragments/modals/newContact :: newModal}"></div>
+		<div th:replace="~{fragments/modals/editContact :: editModal}"></div>
+		<div th:replace="~{fragments/disclaimer :: disclaimer}"></div>
+		
+    	<script th:src="@{/bootstrap/js/bootstrap.bundle.min.js}"></script>				
+		<script src="/bootstrap/js/bootstrap.min.js"></script>
+		<script src="/js/script.min.js"></script>
+		
+		<script th:inline="javascript">
+		    const editModal = document.getElementById('editModal')
+		    const newModal = document.getElementById('newModal')
+		
+		    editModal.addEventListener('show.bs.modal', function (event) {
+		
+		        const button = event.relatedTarget
+		
+		        const id = button.getAttribute('data-id')
+		        const first = button.getAttribute('data-firstName')
+		        const last = button.getAttribute('data-lastName')
+		        const email = button.getAttribute('data-email')
+		        const phone = button.getAttribute('data-phone')
+		
+		        document.getElementById('edit-id').value = id
+		        document.getElementById('edit-firstName').value = first
+		        document.getElementById('edit-lastName').value = last
+		        document.getElementById('edit-email').value = email
+		        document.getElementById('edit-phone').value = phone
+		    })
+		    
+		    
+		    document.addEventListener("DOMContentLoaded", function() {
+		        const hasNewErrors = [[${newContactErrors} ?: false]];
+		        const hasEditErrors = [[${editContactErrors} ?: false]];
+		    	
+		    
+			    if (hasEditErrors) {
+			        const editModal = new bootstrap.Modal(document.getElementById('editModal'));
+			        editModal.show();
+			    	}
+			    if (hasNewErrors){
+			        const newModal = new bootstrap.Modal(document.getElementById('newModal'));
+			        newModal.show();			    	
+			    }
+			});
+		</script>
+					
+	</body>
+</html>

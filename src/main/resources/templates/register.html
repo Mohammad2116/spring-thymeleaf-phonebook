@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8" data-bs-theme="light">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+		<title th:text="${title}"><!-- Page title goes here --></title>
+		<link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+		<link rel="stylesheet" href="/css/styles.min.css">
+	    <style>
+	        body{
+	            background:#f2f4f7;
+	        }
+	        .register-card{
+	            width:420px;
+	            border-radius:16px;
+	        }
+	        .error-text{
+	        	color: red;
+	        }
+	    </style>
+	</head>
+	<body id="home-page" data-bs-spy="scroll" data-bs-target="#mainNav" data-bs-offset="54" style="background: rgb(33, 37, 41);">
+		<!-- navigation bar -->
+		<th:block th:if="${loggedin}">
+			<nav th:replace="~{fragments/loggedinNavbar :: navbar}"></nav>
+		</th:block>
+		<th:block th:unless="${loggedin}">
+			<nav th:replace="~{fragments/loggedoutNavbar :: navbar}"></nav>
+		</th:block>
+				
+		<header class="masthead" style="background-image: url('/img/header-bg.jpg');">
+			<div class="container">
+				<div class="container d-flex justify-content-center align-items-center" style="min-height:100vh;">
+				
+				    <div class="card shadow-lg border-0 register-card p-4">
+				
+				        <h4 class="text-center mb-4 fw-bold">Create Account</h4>
+				
+				        <!-- پیام خطای کلی -->
+				        <div class="alert alert-danger" th:if="${globalError}">
+				            <span th:text="${globalError}"></span>
+				        </div>
+				
+				        <!-- فرم ثبت‌نام -->
+				        <form th:action="@{/register/process}" th:object="${registerForm}" method="post">
+				            
+				            <!-- Email -->
+				            <div class="mb-3">
+				                <input type="email"
+				                       class="form-control form-control-lg"
+				                       placeholder="Email"
+				                       th:field="*{email}"
+				                       required>
+				                <div class="error-text" th:errors="*{email}"></div>
+				            </div>
+				
+				            <!-- Password -->
+				            <div class="mb-3">
+				                <input type="password"
+				                       class="form-control form-control-lg"
+				                       placeholder="Password (min 6 chars)"
+				                       th:field="*{password}"
+				                       required>
+				                <div class="error-text" th:errors="*{password}"></div>
+				            </div>
+				
+				            <!-- Confirm Password -->
+				            <div class="mb-3">
+				                <input type="password"
+				                       class="form-control form-control-lg"
+				                       placeholder="Confirm password"
+				                       th:field="*{confirmPassword}"
+				                       required>
+				                <div class="error-text" th:errors="*{confirmPassword}"></div>
+				            </div>
+				
+				            <!-- First Name -->
+				            <div class="mb-3">
+				                <input type="text"
+				                       class="form-control form-control-lg"
+				                       placeholder="First name"
+				                       th:field="*{firstName}"
+				                       required>
+				                <div class="error-text" th:errors="*{firstName}"></div>
+				            </div>
+				
+				            <!-- Last Name -->
+				            <div class="mb-3">
+				                <input type="text"
+				                       class="form-control form-control-lg"
+				                       placeholder="Last name"
+				                       th:field="*{lastName}"
+				                       required>
+				                <div class="error-text" th:errors="*{lastName}"></div>
+				            </div>
+				
+				            <input type="submit"
+				                   class="btn btn-primary w-100 btn-lg mb-3"
+				                   value="Register"/>
+				
+				            <!-- لینک رفتن به صفحه لاگین -->
+				            <p class="text-center mt-2">
+				                Already have an account?
+				                <a th:href="@{/login}" class="fw-semibold">Login</a>
+				            </p>
+				        </form>
+				    </div>
+				</div>
+			</div>
+		</header>
+		
+		<th:block th:replace="~{fragments/footer :: footer}"></th:block>
+						
+		<!-- scripts -->
+		<script src="/bootstrap/js/bootstrap.min.js"></script>
+		<script src="/js/script.min.js"></script>			
+	</body>
+</html>

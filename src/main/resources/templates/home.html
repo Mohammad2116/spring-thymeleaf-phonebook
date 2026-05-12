@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8" data-bs-theme="light">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+		<title th:text="${title}"><!-- Page title goes here --></title>
+		<link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.min.css}">
+		<link rel="stylesheet" th:href="@{/css/styles.min.css}">
+	</head>
+	<body id="home-page" data-bs-spy="scroll" data-bs-target="#mainNav" data-bs-offset="54" style="background: rgb(33, 37, 41);">
+		<!-- navigation bar -->
+		<th:block th:if="${loggedin}">
+			<nav th:replace="~{fragments/loggedinNavbar :: navbar}"></nav>
+		</th:block>
+		<th:block th:unless="${loggedin}">
+			<nav th:replace="~{fragments/loggedoutNavbar :: navbar}"></nav>
+		</th:block>
+		
+		<header class="masthead text-white text-center d-flex align-items-center" 
+		        style="background:url('/img/header-bg.jpg') center/cover no-repeat; min-height:80vh;">
+		
+		    <div class="container">
+		        <h1 class="display-3 fw-bold">Phonebook</h1>
+		
+		        <p class="lead mt-3">
+		            Simple contact manager built with Spring Boot, Thymeleaf and Bootstrap
+		        </p>
+		
+		        <div class="mt-4">
+		            <a th:if="${!loggedin}" th:href="@{/register}" class="btn btn-primary btn-lg me-2">
+		                Get Started
+		            </a>
+		
+		            <a th:if="${loggedin}" th:href="@{/contacts}" class="btn btn-success btn-lg">
+		                Open Contacts
+		            </a>
+		        </div>
+		    </div>
+		
+		</header>
+		
+		<section class="py-5 bg-dark text-light">
+		    <div class="container">
+		
+		        <div class="row text-center">
+		
+		            <div class="col-md-4">
+		                <h4>Fast</h4>
+		                <p>Built with Spring Boot for fast and reliable backend performance.</p>
+		            </div>
+		
+		            <div class="col-md-4">
+		                <h4>Secure</h4>
+		                <p>Authentication and user specific contacts.</p>
+		            </div>
+		
+		            <div class="col-md-4">
+		                <h4>Simple</h4>
+		                <p>Clean interface built with Thymeleaf and Bootstrap.</p>
+		            </div>
+		
+		        </div>
+		
+		    </div>
+		</section>
+		
+		<th:block th:replace="~{fragments/footer :: footer}"></th:block>
+				
+		<!-- modals -->
+		<div th:replace="~{fragments/disclaimer :: disclaimer}"></div>
+		
+		<!-- scripts -->
+		<script src="/bootstrap/js/bootstrap.min.js"></script>
+		<script src="/js/script.min.js"></script>		
+	</body>
+</html>
