@@ -103,15 +103,17 @@ Authentication is implemented using:
     Remember-me functionality
 
 Clone the Repository
-
-git clone https://github.com/YOUR_USERNAME/phonebook.git
+git clone https://github.com/Mohammad2116/spring-thymeleaf-phonebook.git
 cd phonebook
 
 Configure Database
 
 Update application.properties:
+
 spring.datasource.url=jdbc:postgresql://localhost:5432/phonebook
+
 spring.datasource.username=YOUR_USERNAME
+
 spring.datasource.password=YOUR_PASSWORD
 
 Run the Application
