@@ -1,5 +1,8 @@
 package ir.aspireapps.phonebook.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,6 +27,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+@Tag(
+		name = "AuthController",
+		description = "User authentication and Remember me Token management"
+)
 @Controller
 @RequiredArgsConstructor
 public class AuthController {
@@ -31,7 +38,7 @@ public class AuthController {
 	private final UserFormMapper userFormMapper;
 	private final AuthenticationManager authenticationManager;
 	private final SecurityContextRepository securityContextRepository = new HttpSessionSecurityContextRepository();
-	
+
 	@ModelAttribute
 	public void commonAttributes(Model model) {
 		model.addAttribute("title", "Phone Book");
@@ -59,19 +66,30 @@ public class AuthController {
 	    SecurityContextHolder.setContext(context);
 	    securityContextRepository.saveContext(context, request, response);
 	}
-	
+
+	@Operation(
+			summary = "Register",
+			description = "Render registration page"
+	)
 	@GetMapping("/register")
 	public String register(Model model) {
-
 			model.addAttribute("loginBtnActive", true);
 			model.addAttribute("registerBtnActive", false);
 			model.addAttribute("registerForm", new UserRegisterRequestForm());
 			
 		return "register";
 	}
-	
+
+	@Operation(
+			summary = "Process Registration",
+			description = "Register new user and redirects to contacts page and returns login information"
+	)
 	@PostMapping("/register/process")
-	public String register_process(@Valid @ModelAttribute("registerForm") UserRegisterRequestForm registerForm, 
+	public String register_process(
+			@Parameter(
+					description = "new user details"
+			)
+			@Valid @ModelAttribute("registerForm") UserRegisterRequestForm registerForm,
 			BindingResult result, 
 			Model model,
 	        HttpServletRequest servletRequest, 
@@ -105,7 +123,13 @@ public class AuthController {
 			return "register";
 		}
 	}	
-	
+
+
+	@Operation(
+			summary = "Login page",
+			description = "Renders the login page, processes user credentials, " +
+					"and redirects to the contacts page."
+			)
 	@GetMapping("/login")
 	public String loginPage(Model model) {
 		model.addAttribute("loginBtnActive", false);
@@ -113,6 +137,10 @@ public class AuthController {
 		return "login";
 	}
 
+	@Operation(
+			summary = "Home page",
+			description = "Render main page of application, with links to register or login pages."
+	)
 	@GetMapping("/")
 	public String home(Model model) {
 		model.addAttribute("loginBtnActive", true);

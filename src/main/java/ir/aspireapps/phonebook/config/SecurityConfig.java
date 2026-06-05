@@ -46,7 +46,12 @@ public class SecurityConfig {
 							"/css/**",
 							"/js/**",
 							"/img/**",
-							"/bootstrap/**"
+							"/bootstrap/**",
+							"/v3/api-docs/**",
+							"/swagger-ui/**",
+							"/swagger-ui.html",
+							"/webjars/**",
+							"/swagger-resources/**"
 							).permitAll()
 					.anyRequest().authenticated())
 			
@@ -65,12 +70,12 @@ public class SecurityConfig {
 					.invalidateHttpSession(true)
 					.deleteCookies("JSESSIONID", "remember-me")
 					.permitAll())
-			
+
 			.rememberMe(r -> r
 					.key(rememberMeKey)
 					.tokenValiditySeconds(60 * 60 * 24 * 7)
 					.userDetailsService(customUserDetailsService));
-		
-		return http.build();						
+
+		return http.build();
 	}
 }

@@ -15,6 +15,7 @@ pom.xml.next
 *.iml
 .classpath
 .project
+.env
 
 release.properties
 dependency-reduced-pom.xml

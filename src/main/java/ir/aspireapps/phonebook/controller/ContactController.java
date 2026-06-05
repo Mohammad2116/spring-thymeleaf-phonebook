@@ -1,5 +1,7 @@
 package ir.aspireapps.phonebook.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -31,9 +33,32 @@ public class ContactController {
 	private final ContactService contactService;
 	private final UserFormMapper userFormMapper;
 
+	@Operation(
+			summary = "List of User contacts",
+			description = "Renders a paged list of contacts for the user."
+	)
 	@GetMapping("/contacts")
-	public String contacts(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size,
-			@RequestParam(defaultValue = "lastName") String sortBy, @RequestParam(defaultValue = "asc") String sortDir,
+	public String contacts(
+			@Parameter(
+					description = "Page number.",
+					example = "0"
+			)
+			@RequestParam(defaultValue = "0") int page,
+			@Parameter(
+					description = "Size of the page.",
+					example = "10"
+			)
+			@RequestParam(defaultValue = "10") int size,
+			@Parameter(
+					description = "Name of the field to sort contacts based on",
+					example = "firstName"
+			)
+			@RequestParam(defaultValue = "lastName") String sortBy,
+			@Parameter(
+					description = "Method of sorting (Ascending/Descending).",
+					example = "asc"
+			)
+			@RequestParam(defaultValue = "asc") String sortDir,
 			@RequestParam(required = false) String keyword, Model model) {
 
 		prepareContactsPage(page, size, sortBy, sortDir, keyword, model);
@@ -67,8 +92,16 @@ public class ContactController {
 		model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");	
 	}
 
+	@Operation(
+			summary = "Add Contact",
+			 description = "Add new contact to user contacts list."
+	)
 	@PostMapping("/contacts/save")
-	public String save(@Valid @ModelAttribute("contactCreateForm") ContactCreateForm form, BindingResult result,
+	public String save(
+			@Parameter(
+					description = "New contact details in a Form."
+			)
+			@Valid @ModelAttribute("contactCreateForm") ContactCreateForm form, BindingResult result,
 			@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size,
 			@RequestParam(defaultValue = "lastName") String sortBy, @RequestParam(defaultValue = "asc") String sortDir,
 			@RequestParam(required = false) String keyword, Model model) {
@@ -83,8 +116,16 @@ public class ContactController {
 		return "redirect:/contacts";
 	}
 
+	@Operation(
+			summary = "Update Contact",
+			description = "Updates contact details."
+	)
 	@PostMapping("/contacts/edit")
-	public String edit(@Valid @ModelAttribute("contactUpdateForm") ContactUpdateForm form, BindingResult result,
+	public String edit(
+			@Parameter(
+					description = "New details of contact to edit."
+			)
+			@Valid @ModelAttribute("contactUpdateForm") ContactUpdateForm form, BindingResult result,
 			@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size,
 			@RequestParam(defaultValue = "lastName") String sortBy, @RequestParam(defaultValue = "asc") String sortDir,
 			@RequestParam(required = false) String keyword, Model model) {
@@ -100,8 +141,16 @@ public class ContactController {
 		return "redirect:/contacts";
 	}
 
+	@Operation(
+			summary = "Delete contact",
+			description = "Delete contact from user contacts."
+	)
 	@PostMapping("/contacts/delete/{id}")
-	public String delete(@PathVariable Long id) {
+	public String delete(
+			@Parameter(
+					description = "ID of the target contact to delete."
+			)
+			@PathVariable Long id) {
 		contactService.removeContact(id);
 		return "redirect:/contacts";
 	}
