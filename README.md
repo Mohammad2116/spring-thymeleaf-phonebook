@@ -43,6 +43,11 @@ This project demonstrates a layered backend architecture, secure authentication,
 
 - PostgreSQL
 
+### API Documentation
+
+- OpenAPI 3
+- Swagger UI
+
 ### Build Tool
 
 - Maven
